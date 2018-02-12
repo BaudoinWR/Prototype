@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class MaxSpeedScript : MonoBehaviour {
+public class MaxSpeedScript : NetworkBehaviour {
 
     public float topSpeed;
 	// Use this for initialization

@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class PlayerScript : MonoBehaviour {
+public class PlayerScript : NetworkBehaviour {
 
     public float maxForce = 10f;
     public float slowRate = 5f;
@@ -12,13 +13,21 @@ public class PlayerScript : MonoBehaviour {
     public Rigidbody2D rb2D;
     void Start()
     {
+        if (sprite == null )
+        {
+            sprite = gameObject;
+        }
         rb2D = sprite.GetComponent<Rigidbody2D>();
         rb2D.drag = slowRate;
     }
 
     // Update is called once per frame
     void Update () {
-
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+        //// Touche screen
         if (Input.touches.Length > 0)
         {
             Touch touch = Input.touches[0];
@@ -34,6 +43,21 @@ public class PlayerScript : MonoBehaviour {
             }
         }
 
+        //// Mouse Input
+        if (Input.GetMouseButton(0))
+        {
+            Ray touchRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            foreach (RaycastHit2D hit in hits)
+            {
+                if (hit.transform.gameObject == gameObject)
+                {
+                    Vector2 thatPosition = Input.mousePosition;
+                    SpeedUp(thatPosition);
+                }
+            }
+        }
+
         if (force > 0)
         {
             force -= (slowRate * Time.deltaTime);
@@ -42,15 +66,20 @@ public class PlayerScript : MonoBehaviour {
         
     }
 
+/*
     void OnMouseOver()
     {
-        if (Input.GetMouseButton(0))
+        if (isLocalPlayer)
         {
-            Vector2 thatPosition = Input.mousePosition;
-            SpeedUp(thatPosition);
+            Debug.Log("player " + this);
+            if (Input.GetMouseButton(0))
+            {
+                Vector2 thatPosition = Input.mousePosition;
+                SpeedUp(thatPosition);
+            }
         }
     }
-
+    */
     private void SpeedUp(Vector2 thatPosition)
     {
         Vector3 p = Camera.main.ScreenToWorldPoint(thatPosition);
@@ -61,4 +90,5 @@ public class PlayerScript : MonoBehaviour {
         }
         rb2D.AddForce(v * force);
     }
+    
 }

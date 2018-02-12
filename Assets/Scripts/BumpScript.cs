@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class BumpScript : MonoBehaviour {
+public class BumpScript : NetworkBehaviour {
 
     public float bumpForce = 500f;
 

@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class ImpenetrableScript : MonoBehaviour {
+public class ImpenetrableScript : NetworkBehaviour {
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
